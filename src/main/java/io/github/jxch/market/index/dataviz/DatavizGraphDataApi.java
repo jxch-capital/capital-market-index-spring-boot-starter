@@ -1,6 +1,7 @@
 package io.github.jxch.market.index.dataviz;
 
 import com.alibaba.fastjson2.JSONObject;
+import io.github.jxch.market.index.api.MarketIndexApi;
 import io.github.jxch.market.index.config.MarketIndexAutoConfig;
 import lombok.SneakyThrows;
 import okhttp3.OkHttpClient;
@@ -13,7 +14,7 @@ import java.util.Objects;
 
 @Component
 @Qualifier(MarketIndexAutoConfig.MARKET_INDEX_API)
-public class DatavizGraphDataApi {
+public class DatavizGraphDataApi implements MarketIndexApi<Void, DatavizGraphDataRes> {
     private final OkHttpClient client;
     private final Request request;
 
@@ -29,6 +30,11 @@ public class DatavizGraphDataApi {
             String jsonString = Objects.requireNonNull(response.body()).string();
             return JSONObject.parseObject(jsonString, DatavizGraphDataRes.class);
         }
+    }
+
+    @Override
+    public DatavizGraphDataRes index(Void unused) {
+        return graphData();
     }
 
 }

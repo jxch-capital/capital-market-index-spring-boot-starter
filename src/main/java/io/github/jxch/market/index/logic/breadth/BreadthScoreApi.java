@@ -1,6 +1,7 @@
 package io.github.jxch.market.index.logic.breadth;
 
 import com.alibaba.fastjson2.JSONObject;
+import io.github.jxch.market.index.api.MarketIndexApi;
 import io.github.jxch.market.index.config.MarketIndexAutoConfig;
 import lombok.SneakyThrows;
 import okhttp3.OkHttpClient;
@@ -14,7 +15,7 @@ import java.util.Objects;
 
 @Component
 @Qualifier(MarketIndexAutoConfig.MARKET_INDEX_API)
-public class BreadthScoreApi {
+public class BreadthScoreApi implements MarketIndexApi<Void, BreadthScoreRes> {
     private final OkHttpClient client;
     private final Request request;
 
@@ -31,6 +32,11 @@ public class BreadthScoreApi {
             String jsonString = Objects.requireNonNull(Jsoup.parse(html).select("script[data-for=river]").first()).data();
             return JSONObject.parseObject(jsonString, BreadthScoreRes.class);
         }
+    }
+
+    @Override
+    public BreadthScoreRes index(Void unused) {
+        return breadthScore();
     }
 
 }
